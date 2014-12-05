@@ -1,5 +1,5 @@
-# recroom Yeoman Generator [![Build Status](https://travis-ci.org/mozilla/generator-recroom.svg?branch=master)](https://travis-ci.org/mozilla/generator-recroom)
+# This project is no longer under development.
 
-Based on [Yeoman Ember.js Generator][ember-generator].
+For more info on using Ember CLI with Firefox Developer Editon and Firefox OS, look for our MDN docs (COMING SOON).
 
-[ember-generator]: https://github.com/yeoman/generator-ember
+For more info on Ember and Ember CLI, visit the [Ember CLI website](http://www.ember-cli.com/).

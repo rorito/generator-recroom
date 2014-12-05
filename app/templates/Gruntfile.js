@@ -38,12 +38,12 @@ module.exports = function (grunt) {
                 files: ['<%%= yeoman.app %>/scripts/{,*/}*.js'],
                 tasks: ['neuter']
             },
-            stylus: {
+            sass: {
                 files: [
                     '<%%= yeoman.app %>/styles/{,*/}*.css',
-                    '<%%= yeoman.app %>/styles/{,*/}*.styl'
+                    '<%%= yeoman.app %>/styles/{,*/}*.scss'
                 ],
-                tasks: ['stylus']
+                tasks: ['sass']
             },
             livereload: {
                 options: {
@@ -81,7 +81,8 @@ module.exports = function (grunt) {
                             mountFolder(connect, 'test'),
                             mountFolder(connect, '.tmp')
                         ];
-                    }
+                    },
+                    port: 9001
                 }
             },
             dist: {
@@ -128,7 +129,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://localhost:<%%= connect.options.port %>/index.html']
+                    urls: ['http://localhost:<%%= connect.test.options.port %>/index.html']
                 }
             }
         },<% } else if (testFramework === 'jasmine') { %>
@@ -164,6 +165,7 @@ module.exports = function (grunt) {
                         '<%%= yeoman.dist %>/scripts/{,*/}*.js',
                         '<%%= yeoman.dist %>/styles/{,*/}*.css',
                         '<%%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}',
+                        '!<%= yeoman.dist %>/images/icons/*',
                         '<%%= yeoman.dist %>/styles/fonts/*'
                     ]
                 }
@@ -205,7 +207,7 @@ module.exports = function (grunt) {
         cssmin: {
             dist: {
                 files: {
-                    '<%%= yeoman.dist %>/styles/compiled-stylus.css': [
+                    '<%%= yeoman.dist %>/styles/compiled-sass.css': [
                         '.tmp/styles/{,*/}*.css',
                         '<%%= yeoman.app %>/styles/{,*/}*.css'
                     ]
@@ -291,7 +293,7 @@ module.exports = function (grunt) {
                 'emberTemplates',
                 'imagemin',
                 'svgmin',
-                'htmlmin'
+                'htmlmin:dist'
             ]
         },<%if (options.karma) { %>
         karma: {
@@ -312,16 +314,13 @@ module.exports = function (grunt) {
                 }
             }
         },
-        stylus: {
-            compile: {
-                options: {
-                    compress: false,
-                    paths: ['node_modules/grunt-contrib-stylus/node_modules']
-                },
+        sass: {
+            options: {
+                sourceMap: true,
+            },
+            dist: {
                 files: {
-                    '.tmp/styles/compiled-stylus.css': [
-                        '<%%= yeoman.app %>/styles/*.styl'
-                    ]
+                    '.tmp/styles/compiled-sass.css': '<%%= yeoman.app %>/styles/*.scss'
                 }
             }
         },
@@ -353,7 +352,7 @@ module.exports = function (grunt) {
             'clean:server',
             'replace:app',
             'concurrent:server',
-            'stylus',
+            'sass',
             'neuter:app',
             'connect:livereload',
             'open',
@@ -366,7 +365,7 @@ module.exports = function (grunt) {
         'replace:app',
         'concurrent:test',
         'connect:test',
-        'stylus',
+        'sass',
         'neuter:app',<% if (options.karma) { %>
         'karma'<% } else if (testFramework === 'mocha') { %>
         'mocha'<% } else if (testFramework === 'jasmine') { %>
@@ -378,7 +377,7 @@ module.exports = function (grunt) {
         'replace:dist',
         'useminPrepare',
         'concurrent:dist',
-        'stylus',
+        'sass',
         'neuter:app',
         'concat',
         'cssmin',
